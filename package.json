@@ -1,0 +1,12 @@
+{
+  "name": "mechanical-industry",
+  "version": "1.0.0",
+  "description": "Mechanical Industry Website",
+  "scripts": {
+    "start": "php -S 0.0.0.0:$PORT",
+    "dev": "php -S localhost:8080"
+  },
+  "engines": {
+    "php": ">=7.4"
+  }
+}
