@@ -112,7 +112,6 @@ Thumbs.db
 *~
 
 # Local configuration files
-config/database.php
 .env.local
 .env.production
 
