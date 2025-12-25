@@ -22,17 +22,54 @@ function initializeNavigation() {
         }
     });
 
-    // Mobile menu close on click
-    const navLinks2 = document.querySelectorAll('.navbar-nav .nav-link:not(.dropdown-toggle)');
+    // Mobile menu functionality with body scroll lock
+    const navbarToggler = document.querySelector('.navbar-toggler');
     const navbarCollapse = document.querySelector('.navbar-collapse');
+    const navLinks2 = document.querySelectorAll('.navbar-nav .nav-link:not(.dropdown-toggle)');
     
+    // Handle navbar toggle
+    if (navbarToggler) {
+        navbarToggler.addEventListener('click', function() {
+            // Add small delay to let Bootstrap handle the toggle first
+            setTimeout(() => {
+                if (navbarCollapse.classList.contains('show')) {
+                    document.body.classList.add('navbar-open');
+                } else {
+                    document.body.classList.remove('navbar-open');
+                }
+            }, 10);
+        });
+    }
+    
+    // Close mobile menu when clicking nav links
     navLinks2.forEach(link => {
         link.addEventListener('click', () => {
             if (navbarCollapse.classList.contains('show')) {
                 const bsCollapse = new bootstrap.Collapse(navbarCollapse);
                 bsCollapse.hide();
+                document.body.classList.remove('navbar-open');
             }
         });
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (navbarCollapse.classList.contains('show') && 
+            !navbarCollapse.contains(e.target) && 
+            !navbarToggler.contains(e.target)) {
+            const bsCollapse = new bootstrap.Collapse(navbarCollapse);
+            bsCollapse.hide();
+            document.body.classList.remove('navbar-open');
+        }
+    });
+    
+    // Handle escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && navbarCollapse.classList.contains('show')) {
+            const bsCollapse = new bootstrap.Collapse(navbarCollapse);
+            bsCollapse.hide();
+            document.body.classList.remove('navbar-open');
+        }
     });
 }
 
@@ -68,16 +105,20 @@ function initializeScrollEffects() {
         });
     });
 
-    // Reveal animations on scroll
+    // Reveal animations on scroll - optimized
     const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
+        threshold: 0.05, // Trigger earlier for better UX
+        rootMargin: '0px 0px -20px 0px' // Reduced margin for faster trigger
     };
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
+                // Use requestAnimationFrame for smooth animation
+                requestAnimationFrame(() => {
+                    entry.target.classList.add('visible');
+                });
+                observer.unobserve(entry.target); // Stop observing once animated
             }
         });
     }, observerOptions);

@@ -98,11 +98,14 @@
     <script src="assets/js/main.js"></script>
     
     <script>
-        // Initialize AOS
+        // Initialize AOS with optimized settings for better UX
         AOS.init({
-            duration: 1000,
-            easing: 'ease-in-out',
-            once: true
+            duration: 500, // Reduced from 1000ms to 500ms
+            easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)', // More natural easing
+            once: true,
+            offset: 50, // Trigger animations earlier
+            delay: 0, // Remove global delay
+            disable: 'mobile' // Disable on mobile for performance (optional)
         });
         
         // Back to top functionality
