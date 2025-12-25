@@ -2,12 +2,16 @@
 session_start();
 
 // Configuration
-define('BASE_URL', 'http://localhost/yogesh-website');
+// Dynamic BASE_URL for different environments
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+$base_path = '';
+define('BASE_URL', $protocol . '://' . $host . $base_path);
 define('UPLOAD_PATH', 'assets/uploads/');
 define('MAX_FILE_SIZE', 5 * 1024 * 1024); // 5MB
 
 // Database connection
-require_once 'config/database.php';
+require_once __DIR__ . '/../config/database.php';
 $db = new Database();
 
 // Helper Functions
