@@ -17,16 +17,24 @@ class Database {
 
         try {
             $dsn = "mysql:host={$this->host};port={$this->port};dbname={$this->database};charset=utf8mb4";
+            
+            // PDO options
+            $options = [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false
+            ];
+            
+            // Add SSL options only if constants are available (for compatibility)
+            if (defined('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT')) {
+                $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+            }
+            
             $this->conn = new PDO(
                 $dsn,
                 $this->username,
                 $this->password,
-                [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                    PDO::ATTR_EMULATE_PREPARES => false,
-                    PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
-                ]
+                $options
             );
         } catch(PDOException $e) {
             error_log("Database connection failed: " . $e->getMessage());
